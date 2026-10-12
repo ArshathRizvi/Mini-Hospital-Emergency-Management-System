@@ -74,6 +74,15 @@ c:\Projects\test1\
 ├── .gitignore                          # Git ignore rules for compiled classes
 ├── README.md                           # Comprehensive documentation
 │
+├── screenshots/                        # Program output verification screenshots
+│   ├── 01_main_menu.png
+│   ├── 02_bst_patient_records.png
+│   ├── 03_patient_visit_history.png
+│   ├── 04_emergency_queue.png
+│   ├── 05_treatment_stack.png
+│   ├── 06_emergency_simulation.png
+│   └── 07_automated_test_suite.png
+│
 └── src/                                # Java source code
     ├── BSTNode.java                    # Node class for Patient BST
     ├── EmergencyQueue.java             # Custom linked Queue (FIFO)
@@ -82,6 +91,7 @@ c:\Projects\test1\
     ├── Patient.java                    # Patient entity model
     ├── PatientBST.java                 # Custom Binary Search Tree implementation
     ├── QueueNode.java                  # Node class for Emergency Queue
+    ├── ScreenshotGenerator.java        # Utility to generate terminal output screenshots
     ├── StackNode.java                  # Node class for Treatment Stack
     ├── TreatmentRecord.java            # Treatment record entity model
     ├── TreatmentStack.java             # Custom linked Stack (LIFO)
@@ -130,7 +140,8 @@ The project was developed progressively with clear, modular commits:
 | `2a2c59f` | `Implemented treatment history using Stack (LIFO)` | Created `TreatmentRecord`, `StackNode`, and `TreatmentStack` |
 | `f836fde` | `Added interactive console menu and system integration` | Built user-friendly console CLI with sample data and workflow |
 | `f1c11e3` | `Added testing for all data structure operations` | Added `HospitalSystemTest` standalone verification suite |
-| *(Latest)* | `Updated README with documentation and execution instructions` | Comprehensive project report and user guide |
+| `2e85051` | `Updated README with documentation and execution instructions` | Comprehensive project report and user guide |
+| *(Latest)* | `Added program output screenshots and updated documentation` | Verification screenshots of all 4 data structures |
 
 ---
 
@@ -153,3 +164,37 @@ When recording your demonstration video:
 4. **Design Decisions & Reflection (1-2 mins):**
    - Explain why custom node-based implementations were chosen instead of built-in collections.
    - Reflect on learnings: recursive BST balancing/deletion complexity, pointer management in linked lists, and FIFO/LIFO real-world modeling.
+
+---
+
+## 7. Screenshots of Program Output
+
+All program execution outputs are saved as high-resolution images in the `screenshots/` directory:
+
+### 1. Main Menu Interface
+![Main Menu](screenshots/01_main_menu.png)
+
+### 2. Patient Records — Binary Search Tree (BST)
+Demonstrates In-Order Traversal (sorted by Patient ID), Search by ID, Insert new patient, and Deletion:
+![BST Patient Records](screenshots/02_bst_patient_records.png)
+
+### 3. Patient Visit History — Singly Linked List
+Demonstrates displaying previous hospital visits, adding a new visit, searching, and removing:
+![Visit History Linked List](screenshots/03_patient_visit_history.png)
+
+### 4. Emergency Patient Queue — Queue (FIFO)
+Demonstrates waiting queue display, FIFO dequeuing for treatment, and remaining queue state:
+![Emergency Queue](screenshots/04_emergency_queue.png)
+
+### 5. Treatment History — Stack (LIFO)
+Demonstrates completed treatment records in LIFO order (most recent first) and pop operation:
+![Treatment Stack](screenshots/05_treatment_stack.png)
+
+### 6. Emergency Treatment Simulation (Integrated Workflow)
+Demonstrates full cycle connecting all four data structures:
+![Emergency Simulation](screenshots/06_emergency_simulation.png)
+
+### 7. Automated Test Suite Verification
+Demonstrates all data structures passing automated test assertions:
+![Automated Test Suite](screenshots/07_automated_test_suite.png)
+
