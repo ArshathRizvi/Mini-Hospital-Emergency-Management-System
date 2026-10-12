@@ -1,0 +1,200 @@
+================================================================================
+CIT300 - DATA STRUCTURES AND ALGORITHMS (INDIVIDUAL MID ASSIGNMENT)
+VIDEO DEMONSTRATION SPOKEN SCRIPT
+================================================================================
+
+Student Name       : Arshath Rizvi
+Student ID         : [ENTER YOUR STUDENT ID HERE]
+Degree / Course    : CIT300 - Data Structures and Algorithms
+Assignment Title   : Mini Hospital Emergency Management System Using Data Structures
+GitHub Repository  : https://github.com/ArshathRizvi/Mini-Hospital-Emergency-Management-System
+
+Total Video Time   : 8 Minutes 30 Seconds
+(Matches the video: demonstration_screen_recording.mp4)
+
+--------------------------------------------------------------------------------
+SECTION 1: INTRODUCTION & PROJECT OVERVIEW
+Time Period in Video: 0:00 - 1:00 (Duration: 60 Seconds)
+--------------------------------------------------------------------------------
+[WHAT TO SAY]:
+"Hello, my name is Arshath Rizvi, Student ID [SAY YOUR STUDENT ID HERE]. 
+This is my video demonstration for the CIT300 Data Structures and Algorithms 
+Individual Mid Assignment. 
+
+My project is titled 'Mini Hospital Emergency Management System'. 
+In this assignment, I designed and implemented a Java-based simulation of an 
+emergency hospital unit that manages patient arrival, triage waiting queues, 
+doctor consultations, completed treatment logs, and patient medical visit history.
+
+To meet all university requirements without using Java's built-in collections, 
+I implemented four core data structures completely from scratch:
+1. A Binary Search Tree (BST) for patient records.
+2. A custom Queue for the emergency waiting line following FIFO.
+3. A custom Stack for completed treatment history following LIFO.
+4. A Singly Linked List embedded in each patient record for previous visits.
+
+Let us now review the GitHub repository and development evidence."
+
+
+--------------------------------------------------------------------------------
+SECTION 2: GITHUB REPOSITORY & DEVELOPMENT EVIDENCE
+Time Period in Video: 1:00 - 1:45 (Duration: 45 Seconds)
+--------------------------------------------------------------------------------
+[WHAT TO SAY]:
+"Here is my public GitHub repository under my personal account: ArshathRizvi.
+The repository URL is github.com/ArshathRizvi/Mini-Hospital-Emergency-Management-System.
+
+As required by Component 5 of the marking scheme, the project was built 
+progressively with meaningful commits demonstrating each development stage:
+- Initial project structure and gitignore setup.
+- Singly Linked List implementation for visit history.
+- Binary Search Tree insertion and in-order traversal.
+- BST recursive search and 3-case deletion logic.
+- Emergency queue implementation following FIFO.
+- Treatment history stack implementation following LIFO.
+- Interactive console CLI integration.
+- Automated assertion test suite.
+- Verification screenshots and README documentation.
+
+All source files are cleanly organized inside the src directory."
+
+
+--------------------------------------------------------------------------------
+SECTION 3: COMPONENT 1 - PATIENT RECORDS (BINARY SEARCH TREE)
+Time Period in Video: 1:45 - 3:15 (Duration: 90 Seconds)
+--------------------------------------------------------------------------------
+[WHAT TO SAY]:
+"Now let us examine Component 1: Patient Records managed using a Binary Search Tree.
+The Patient ID is used as the key for ordering the tree.
+
+When I run In-Order Traversal (Option 4), the algorithm recursively traverses 
+Left subtree, Root node, and Right subtree. As you can see, all patients are 
+displayed in ascending sorted order of their Patient IDs: 101, 102, 104, 105, 
+and 108.
+
+Next, I demonstrate Search by Patient ID (Option 2). Searching for ID 102 
+navigates the tree in O(log n) time, successfully retrieving Nimal Perera 
+with Chest Pain.
+
+Next, I insert a new patient (Option 1): ID 109, Ruwan Fernando. The recursive 
+insert places him in the correct position in the right subtree.
+
+Finally, I demonstrate BST Deletion (Option 3) by deleting patient 104. 
+My deletion algorithm handles leaf nodes, single-child nodes, and two-child nodes 
+by finding the in-order successor. Displaying in-order traversal again confirms 
+ID 104 is deleted and the remaining tree maintains BST properties."
+
+
+--------------------------------------------------------------------------------
+SECTION 4: COMPONENT 4 - PATIENT VISIT HISTORY (SINGLY LINKED LIST)
+Time Period in Video: 3:15 - 4:15 (Duration: 60 Seconds)
+--------------------------------------------------------------------------------
+[WHAT TO SAY]:
+"Next is Component 4: Patient Visit History implemented using a Singly Linked List.
+Each patient stored in the BST has their own independent linked list of visits.
+
+Let us select Patient 102 (Nimal Perera). 
+Choosing Option 4 displays his previous hospital consultations from the head 
+node forward.
+
+When we add a new visit (Option 1): Visit ID 5 on 2026-04-01 with Dr. Alwis for 
+Acute Asthma, a new VisitNode is created and appended to the end of the list.
+
+We can search for this visit by ID (Option 2), and we can remove an old visit, 
+such as Visit ID 1 (Option 3). The remove method traverses to find the node, 
+unlinks it, and updates pointers smoothly without memory leaks."
+
+
+--------------------------------------------------------------------------------
+SECTION 5: COMPONENT 2 - EMERGENCY PATIENT QUEUE (QUEUE - FIFO)
+Time Period in Video: 4:15 - 5:15 (Duration: 60 Seconds)
+--------------------------------------------------------------------------------
+[WHAT TO SAY]:
+"Now we move to Component 2: the Emergency Patient Queue.
+Patients arriving at the emergency unit must be treated according to their arrival 
+order following the FIFO principle — First-In, First-Out.
+
+Option 3 displays the waiting queue: Patient 102 arrived first, followed by 105, 
+then 101.
+
+When a medical officer calls the next patient for treatment, we invoke Dequeue 
+(Option 2). Patient 102 is immediately removed from the front of the queue 
+because he arrived first.
+
+Viewing the queue again shows only 2 waiting patients remaining, with Patient 105 
+now at position 1. Empty queue conditions are safely handled with a warning message."
+
+
+--------------------------------------------------------------------------------
+SECTION 6: COMPONENT 3 - TREATMENT HISTORY (STACK - LIFO)
+Time Period in Video: 5:15 - 6:00 (Duration: 45 Seconds)
+--------------------------------------------------------------------------------
+[WHAT TO SAY]:
+"Next is Component 3: Treatment History managed using a custom Stack.
+When doctor consultations conclude, completed treatment records are pushed onto 
+the stack following the LIFO principle — Last-In, First-Out.
+
+This allows hospital staff to immediately inspect the most recently completed 
+cases at the top.
+
+Option 3 displays the treatment history in reverse-chronological order, showing 
+the latest patient (ID 106) at the top.
+
+If we perform a Pop operation (Option 2), the most recent treatment record is 
+popped from the top of the stack, leaving the older record (ID 103) as the new top. 
+Empty stack conditions are also validated gracefully."
+
+
+--------------------------------------------------------------------------------
+SECTION 7: INTEGRATED EMERGENCY SIMULATION WORKFLOW
+Time Period in Video: 6:00 - 7:00 (Duration: 60 Seconds)
+--------------------------------------------------------------------------------
+[WHAT TO SAY]:
+"To show how all four data structures interact seamlessly in an actual emergency 
+room, I implemented Option 5: the Emergency Treatment Simulation.
+
+When triggered, the simulation executes a complete clinical cycle:
+1. It dequeues the next waiting patient from the Emergency Queue (FIFO).
+2. The attending physician enters the diagnosis and treatment administered.
+3. The treatment record is automatically pushed onto the Treatment History Stack (LIFO).
+4. Simultaneously, the record is appended to that specific patient's Singly Linked 
+   List visit history.
+
+This ties the Binary Search Tree, Queue, Stack, and Linked List into a cohesive, 
+real-world healthcare workflow."
+
+
+--------------------------------------------------------------------------------
+SECTION 8: AUTOMATED TEST VERIFICATION & SYSTEM REFLECTION
+Time Period in Video: 7:00 - 7:45 (Duration: 45 Seconds)
+--------------------------------------------------------------------------------
+[WHAT TO SAY]:
+"To guarantee algorithmic accuracy, I wrote an automated test class with assertions: 
+HospitalSystemTest.
+
+When executed with 'java -ea -cp src HospitalSystemTest':
+- Singly Linked List operations pass.
+- Binary Search Tree insertion, search, and 3-case deletion pass.
+- Emergency Queue FIFO ordering and empty handling pass.
+- Treatment Stack LIFO ordering and empty handling pass.
+All unit tests pass with 100% success."
+
+
+--------------------------------------------------------------------------------
+SECTION 9: REFLECTION & CONCLUSION
+Time Period in Video: 7:45 - 8:30 (Duration: 45 Seconds)
+--------------------------------------------------------------------------------
+[WHAT TO SAY]:
+"In conclusion, this project gave me deep hands-on experience in implementing 
+fundamental data structures from scratch in Java.
+
+The most challenging technical aspect was managing pointer integrity in BST 
+deletion, especially replacing a two-child node with its in-order successor 
+without corrupting subtree references.
+
+This assignment clearly demonstrated how foundational data structures like 
+BSTs, queues, stacks, and linked lists solve real-world operational problems in 
+emergency hospital management.
+
+Thank you very much for evaluating my assignment!"
+================================================================================
