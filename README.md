@@ -1,307 +1,200 @@
-# Data Structure & Graph Performance Analyzer
+# CIT300 - Data Structures and Algorithms
+## Individual Mid Assignment: Mini Hospital Emergency Management System
 
-[![Java Version](https://img.shields.io/badge/Java-8%20%7C%2011%20%7C%2017%2B-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)](https://www.oracle.com/java/)
-[![Course](https://img.shields.io/badge/Course-CIT300%20Assignment%202-0052CC?style=for-the-badge)](README.md)
-[![Architecture](https://img.shields.io/badge/Architecture-Modular%20OOP-2ea44f?style=for-the-badge)](README.md)
-[![License](https://img.shields.io/badge/License-Academic-lightgrey?style=for-the-badge)](README.md)
-
-An interactive, high-precision Java console suite designed to simulate, benchmark, and evaluate fundamental data structures, search algorithms, and graph traversal methods. The tool pairs theoretical asymptotic analysis ($O$-notation) with empirical nanosecond runtime benchmarks and operation-step telemetry via an integrated measurement engine.
-
----
-
-## Table of Contents
-
-- [Overview](#overview)
-- [System Architecture](#system-architecture)
-- [Key Features & Modules](#key-features--modules)
-  - [1. Array Operations](#1-array-operations)
-  - [2. Stack Operations (LIFO)](#2-stack-operations-lifo)
-  - [3. Circular Queue Operations (FIFO)](#3-circular-queue-operations-fifo)
-  - [4. Singly Linked List](#4-singly-linked-list)
-  - [5. Searching Algorithms](#5-searching-algorithms)
-  - [6. Graph Traversal (BFS & DFS)](#6-graph-traversal-bfs--dfs)
-  - [7. Empirical Performance Tracker](#7-empirical-performance-tracker)
-- [Complexity Analysis Reference](#complexity-analysis-reference)
-- [Project Directory Structure](#project-directory-structure)
-- [Getting Started](#getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Compilation](#compilation)
-  - [Execution](#execution)
-- [CLI Navigation & Menu Map](#cli-navigation--menu-map)
-- [Team & Branch Workflow](#team--branch-workflow)
+**Student Name:** Arshath Rizvi  
+**Course:** CIT300 - Data Structures and Algorithms  
+**Assignment Title:** Mini Hospital Emergency Management System Using Data Structures  
+**Technology:** Java (JDK 17+)
 
 ---
 
-## Overview
+## 1. Project Overview
 
-The **Data Structure & Graph Performance Analyzer** was developed as part of **CIT300 (Assignment 2)** to provide an empirical testing platform for classical computer science algorithms.
+The **Mini Hospital Emergency Management System** is a console-based healthcare management simulation developed in Java. It models the core operational lifecycle of an emergency hospital unit:
+1. **Patient Registration & Records:** Storing and retrieving patient profiles efficiently.
+2. **Emergency Queueing:** Managing arriving emergency patients in real time based on their arrival order.
+3. **Emergency Treatment & History:** Tracking treated cases in reverse-chronological order.
+4. **Patient Visit History:** Keeping an individualized medical consultation timeline for each patient.
 
-Instead of analyzing algorithmic complexity solely from textbook definitions, this application captures runtime metrics directly from memory operations during runtime:
-* **High-Resolution Clocking**: Measures elapsed wall-clock execution time in nanoseconds (`System.nanoTime()`).
-* **Step & Shift Counting**: Quantifies inner-loop comparisons, array index shifts, and node traversals.
-* **Invariant & Bounds Checking**: Enforces defensive boundaries (underflow, overflow, null verification, and sorted order constraints).
+The core objective of this project is to implement fundamental data structures from scratch (without relying on Java's built-in `java.util` collection wrappers) to demonstrate custom node-pointer manipulation and algorithmic problem-solving.
 
 ---
 
-## System Architecture
+## 2. Data Structures Implemented
 
-The application adopts a modular object-oriented design where each data structure is encapsulated in its own component and coupled with the `PerformanceTracker` service.
+The system incorporates four custom-built data structures:
+
+### A. Patient Records — Binary Search Tree (BST) [20 Marks]
+- **Class:** `PatientBST.java`, `BSTNode.java`, `Patient.java`
+- **Key Used:** `patientId` (Integer)
+- **Principle:** Left subtree keys `<` Root key `<` Right subtree keys.
+- **Implemented Operations:**
+  - `insert(Patient patient)`: Recursively places the patient into the correct tree position based on `patientId`. Rejects duplicate IDs.
+  - `search(int patientId)`: Recursively searches by `patientId` in $O(\log n)$ average time complexity.
+  - `delete(int patientId)`: Handles all three standard BST deletion cases:
+    1. **Leaf node (0 children):** Node removed directly.
+    2. **Single child (1 child):** Node replaced by its child.
+    3. **Two children (2 children):** Node replaced with its *in-order successor* (the minimum node from the right subtree), and successor is deleted.
+  - `inOrderTraversal()`: Traverses the tree in `Left -> Root -> Right` order, displaying all registered patients in ascending order of their `patientId`.
+
+### B. Emergency Patient Queue — Queue (FIFO) [20 Marks]
+- **Class:** `EmergencyQueue.java`, `QueueNode.java`
+- **Principle:** First-In, First-Out (FIFO). The first patient to arrive at the emergency unit is the first to be called for treatment.
+- **Implemented Operations:**
+  - `enqueue(Patient patient)`: Appends a newly arrived patient to the rear of the queue.
+  - `dequeue()`: Removes and returns the patient at the front of the queue for doctor consultation.
+  - `displayQueue()`: Displays all patients currently waiting in order of position.
+  - **Empty Queue Handling:** Returns `null` and displays a clear message if `dequeue()` is called on an empty queue.
+
+### C. Treatment History — Stack (LIFO) [20 Marks]
+- **Class:** `TreatmentStack.java`, `StackNode.java`, `TreatmentRecord.java`
+- **Principle:** Last-In, First-Out (LIFO). The most recently completed treatment is at the top of the stack.
+- **Implemented Operations:**
+  - `push(TreatmentRecord record)`: Places a completed treatment entry onto the top of the stack.
+  - `pop()`: Removes and returns the most recently completed treatment record from the top.
+  - `displayHistory()`: Iterates from `top` downward, displaying records in reverse-chronological order.
+  - **Empty Stack Handling:** Returns `null` and prevents errors if `pop()` is invoked on an empty stack.
+
+### D. Patient Visit History — Singly Linked List [20 Marks]
+- **Class:** `VisitLinkedList.java`, `VisitNode.java`, `VisitRecord.java`
+- **Principle:** Dynamic sequential list of previous medical visits attached to each individual `Patient` instance.
+- **Implemented Operations:**
+  - `addVisit(VisitRecord visit)`: Appends a new consultation visit to the end of the patient's visit chain.
+  - `removeVisit(int visitId)`: Unlinks and deletes a visit record matching the given `visitId`.
+  - `searchVisit(int visitId)`: Sequentially traverses the list to find a specific visit record.
+  - `displayVisits()`: Traverses and prints all previous hospital visits for the patient.
+
+---
+
+## 3. Project Structure
 
 ```
-                              +-----------------------+
-                              |      Main (CLI)       |
-                              +-----------+-----------+
-                                          |
-                +-------------------------+-------------------------+
-                |                         |                         |
-       +--------v--------+       +--------v--------+       +--------v--------+
-       | ArrayOperations |       |    IntStack     |       |  CircularQueue  |
-       +--------+--------+       +--------+--------+       +--------+--------+
-                |                         |                         |
-       +--------v--------+       +--------v--------+       +--------v--------+
-       | LinkedList      |       | SearchAlgorithms|       |      Graph      |
-       +--------+--------+       +--------+--------+       +--------+--------+
-                |                         |                         |
-                +-------------------------+-------------------------+
-                                          |
-                              +-----------v-----------+
-                              |  PerformanceTracker   |
-                              |  (Nanosecond Engine)  |
-                              +-----------------------+
-```
-
----
-
-## Key Features & Modules
-
-### 1. Array Operations
-* **File**: `ArrayOperations.java`
-* **Storage**: Contiguous linear storage backed by Java collection abstractions.
-* **Capabilities**:
-  * `insert(index, value)`: Arbitrary-index insertion with automatic elements-shifted tracking.
-  * `delete(value)`: Searches for target value and shifts downstream elements leftward.
-  * `search(value)`: Sequential search returning the target index and comparison count.
-  * `display()`: Serializes and prints the active array elements.
-
-### 2. Stack Operations (LIFO)
-* **File**: `IntStack.java`
-* **Mechanism**: Array-backed integer stack following the **Last-In, First-Out (LIFO)** policy with configurable capacity (default: 10).
-* **Capabilities**:
-  * `push(value)`: Validates stack boundary; appends element to top ($O(1)$).
-  * `pop()`: Returns and removes top element with underflow guard ($O(1)$).
-  * `peek()`: Inspects the current top element without mutation ($O(1)$).
-  * `display()`: Inspects stack elements ordered from base to top.
-
-### 3. Circular Queue Operations (FIFO)
-* **File**: `CircularQueue.java`
-* **Mechanism**: Fixed-size circular buffer using modulo indexing `(index + 1) % capacity` to achieve space-efficient **First-In, First-Out (FIFO)** processing.
-* **Capabilities**:
-  * `enqueue(value)`: Inserts element at rear pointer.
-  * `dequeue()`: Extracts element from front pointer and increments head index cyclically.
-  * `peek()` / `front()`: Non-destructive inspection of the current head.
-  * Circular pointer mathematics prevent memory starvation and avoid array element shifting.
-
-### 4. Singly Linked List
-* **File**: `LinkedListStructure.java`
-* **Mechanism**: Dynamic node-pointer chaining (`Node { int data; Node next; }`).
-* **Capabilities**:
-  * `insert(value)`: Appends nodes dynamically at the tail without requiring pre-allocated capacities.
-  * `delete(value)`: Pointer adjustments to unlink target nodes across head, interior, or tail positions.
-  * `search(value)`: Traverses node references sequentially from head.
-  * `runAllTests()`: Built-in automated regression test harness testing 10 edge cases (empty lists, head removal, middle removal, and negative searches).
-
-### 5. Searching Algorithms
-* **File**: `SearchAlgorithms.java`
-* **Linear Search**: Sequential element-by-element evaluation ($O(n)$) compatible with unsorted arrays.
-* **Binary Search**: Divide-and-conquer search ($O(\log n)$) on sorted data using middle index halving (`low + (high - low) / 2`). Includes input sort-validation guards.
-* **Comparative Analyzer**: Side-by-side benchmarking of both algorithms on identical datasets to observe empirical efficiency divergence.
-
-### 6. Graph Traversal (BFS & DFS)
-* **File**: `Graph.java`
-* **Representation**: Adjacency list backed by `LinkedHashMap<String, Set<String>>` to maintain predictable insertion order without duplicates.
-* **Capabilities**:
-  * `addVertex(name)`: Adds normalized, unique vertex labels.
-  * `addEdge(v1, v2)`: Constructs bidirectional (undirected) connections.
-  * `breadthFirstTraversal(start)`: Queue-driven iterative level-order traversal (BFS).
-  * `depthFirstTraversal(start)`: Recursive backtracking traversal (DFS).
-
-### 7. Empirical Performance Tracker
-* **File**: `PerformanceTracker.java`
-* **Mechanism**: Telemetry collector that logs detailed audit trails across all data structure operations.
-* **Logged Parameters**:
-  * **Operation Identifier**: e.g., `Array INSERT`, `Binary Search`, `BFS`.
-  * **Input Size ($n$)**: Number of active items in the target data structure.
-  * **Steps / Operations**: Comparisons made, elements shifted, or edges visited.
-  * **Elapsed Time**: Wall-clock time recorded in nanoseconds ($10^{-9}\text{ s}$).
-  * **Diagnostic Details**: Contextual output strings detailing the operation result.
-
----
-
-## Complexity Analysis Reference
-
-| Data Structure / Algorithm | Operation | Best Case | Average Case | Worst Case | Space Complexity | Measured Metric |
-| :--- | :--- | :---: | :---: | :---: | :---: | :--- |
-| **Array** | Insert (Arbitrary) | $O(1)$ | $O(n)$ | $O(n)$ | $O(1)$ | Elements shifted + nanos |
-| **Array** | Delete (By Value) | $O(1)$ | $O(n)$ | $O(n)$ | $O(1)$ | Comparisons + shifts + nanos |
-| **Array** | Search (Linear) | $O(1)$ | $O(n)$ | $O(n)$ | $O(1)$ | Comparisons + nanos |
-| **Stack** | Push / Pop / Peek | $O(1)$ | $O(1)$ | $O(1)$ | $O(n)$ | Direct index operations |
-| **Circular Queue** | Enqueue / Dequeue | $O(1)$ | $O(1)$ | $O(1)$ | $O(n)$ | Modulo index increments |
-| **Linked List** | Insert (Tail) | $O(1)$ | $O(n)$ | $O(n)$ | $O(1)$ | Traversal steps + nanos |
-| **Linked List** | Delete (Value) | $O(1)$ | $O(n)$ | $O(n)$ | $O(1)$ | Traversal steps + nanos |
-| **Linear Search** | Value Search | $O(1)$ | $O(n)$ | $O(n)$ | $O(1)$ | Iterations / comparisons |
-| **Binary Search** | Value Search | $O(1)$ | $O(\log n)$ | $O(\log n)$ | $O(1)$ | Bisection comparisons |
-| **Graph (BFS)** | Traversal | $O(V + E)$ | $O(V + E)$ | $O(V + E)$ | $O(V)$ | Visited nodes + edge visits |
-| **Graph (DFS)** | Traversal | $O(V + E)$ | $O(V + E)$ | $O(V + E)$ | $O(V)$ | Recursive call stack steps |
-
----
-
-## Project Directory Structure
-
-```text
-Data-Structure-Graph-Performance-Analyzer/
-├── .gitignore
-├── README.md
-└── src/
-    └── com/
-        └── cit300/
-            └── analyzer/
-                ├── ArrayOperations.java       # Dynamic array manipulation & metrics
-                ├── CircularQueue.java         # Modulo-based circular FIFO queue
-                ├── Graph.java                 # Adjacency list graph with BFS & DFS
-                ├── IntStack.java              # LIFO array-backed stack
-                ├── LinkedListStructure.java   # Singly linked list with node chaining
-                ├── Main.java                  # Interactive CLI application & routing
-                ├── PerformanceTracker.java    # Telemetry logging & benchmark suite
-                └── SearchAlgorithms.java      # Linear and binary search routines
+c:\Projects\test1\
+│
+├── .gitignore                          # Git ignore rules for compiled classes
+├── README.md                           # Comprehensive documentation
+│
+├── screenshots/                        # Program output verification screenshots
+│   ├── 01_main_menu.png
+│   ├── 02_bst_patient_records.png
+│   ├── 03_patient_visit_history.png
+│   ├── 04_emergency_queue.png
+│   ├── 05_treatment_stack.png
+│   ├── 06_emergency_simulation.png
+│   └── 07_automated_test_suite.png
+│
+└── src/                                # Java source code
+    ├── BSTNode.java                    # Node class for Patient BST
+    ├── EmergencyQueue.java             # Custom linked Queue (FIFO)
+    ├── HospitalManagementSystem.java   # Main interactive console CLI application
+    ├── HospitalSystemTest.java         # Automated verification test suite
+    ├── Patient.java                    # Patient entity model
+    ├── PatientBST.java                 # Custom Binary Search Tree implementation
+    ├── QueueNode.java                  # Node class for Emergency Queue
+    ├── ScreenshotGenerator.java        # Utility to generate terminal output screenshots
+    ├── StackNode.java                  # Node class for Treatment Stack
+    ├── TreatmentRecord.java            # Treatment record entity model
+    ├── TreatmentStack.java             # Custom linked Stack (LIFO)
+    ├── VisitLinkedList.java            # Custom Singly Linked List implementation
+    ├── VisitNode.java                  # Node class for Visit Singly Linked List
+    └── VisitRecord.java                # Visit record entity model
 ```
 
 ---
 
-## Getting Started
+## 4. How to Compile and Run
 
 ### Prerequisites
-* **Java Development Kit (JDK)**: Version 8 or higher (JDK 11, 17, or 21 recommended).
-* Compatible terminal (PowerShell, Command Prompt, bash, or zsh).
+- Java Development Kit (JDK) 17 or higher installed.
 
-Verify your Java installation:
+### Option A: Running the Main Interactive System
+1. Open PowerShell or Command Prompt in the project root directory.
+2. Compile all Java source files:
+   ```bash
+   javac src/*.java
+   ```
+3. Run the interactive console application:
+   ```bash
+   java -cp src HospitalManagementSystem
+   ```
+
+### Option B: Running the Automated Test Suite
+To automatically verify all operations (BST insert/search/delete, Queue enqueue/dequeue, Stack push/pop, Linked List add/search/remove):
 ```bash
-javac -version
-java -version
-```
-
-### Compilation
-
-Compile all Java source files into a target output directory (e.g., `bin` or `out`):
-
-```bash
-# Windows (PowerShell)
-javac -d bin (Get-ChildItem -Path src -Filter "*.java" -Recurse | Select-Object -ExpandProperty FullName)
-
-# macOS / Linux (bash)
-javac -d bin $(find src -name "*.java")
-```
-
-### Execution
-
-Launch the interactive console application:
-
-```bash
-java -cp bin com.cit300.analyzer.Main
-```
-
-To run the standalone unit verification harness for the Singly Linked List:
-```bash
-java -cp bin com.cit300.analyzer.LinkedListStructure
+java -ea -cp src HospitalSystemTest
 ```
 
 ---
 
-## CLI Navigation & Menu Map
+## 5. Development History & Commit Evidence
 
-The command-line interface provides an intuitive menu hierarchy:
+The project was developed progressively with clear, modular commits:
 
-```text
-================================================================
-            DATA STRUCTURE & GRAPH ANALYZER
-================================================================
-  1. Array Operations          --> Insert, Delete, Search, Display
-  2. Stack Operations          --> Push, Pop, Peek, Display (LIFO)
-  3. Queue Operations          --> Enqueue, Dequeue, Peek, Display (FIFO)
-  4. Linked List Operations    --> Insert, Delete, Search, Display (Nodes)
-  5. Searching Operations      --> Linear Search vs. Binary Search
-  6. Graph Operations          --> Add Vertices/Edges, Adjacency List, BFS, DFS
-  7. Performance Comparison    --> Comparative Search Efficiency Benchmarks
-  8. Display All Results       --> View Session Execution Metrics & Nanosecond Logs
-  9. Exit
-================================================================
-```
-
-### Sample Session Output
-
-#### Linear vs. Binary Search Benchmark (Option 7)
-```text
-PERFORMANCE COMPARISON
-How many integer values? 7
-Enter value 1: 4
-Enter value 2: 8
-Enter value 3: 15
-Enter value 4: 16
-Enter value 5: 23
-Enter value 6: 42
-Enter value 7: 99
-Both searches will use this same sorted data: [4, 8, 15, 16, 23, 42, 99]
-Enter the target value: 42
-
-Linear search: found at index 5
-Binary search: found at index 5
-Linear search has O(n) time complexity; binary search has O(log n) time complexity on sorted data.
-The tracker records the actual comparisons and elapsed time for each search.
-```
-
-#### Graph Traversals (Option 6)
-```text
-GRAPH OPERATIONS
-Vertex added: A, B, C, D, E
-Undirected edges added: (A-B), (A-C), (B-D), (C-D), (D-E)
-
-Display Graph:
-A -> [B, C]
-B -> [A, D]
-C -> [A, D]
-D -> [B, C, E]
-E -> [D]
-
-BFS order (start at A): [A, B, C, D, E]
-DFS order (start at A): [A, B, D, C, E]
-```
-
-#### Performance Tracker Audit (Option 8)
-```text
-Performance measurements:
-1. Array INSERT  | input size: 0 | steps: 0  | elapsed: 12400 ns | details: inserted 45 at index 0; elements shifted: 0
-2. Array SEARCH  | input size: 4 | steps: 2  | elapsed: 8700 ns  | details: value 90 found at index 1; comparisons: 2
-3. Linear Search | input size: 7 | steps: 6  | elapsed: 19500 ns | details: target 42 found at index 5; comparisons: 6
-4. Binary Search | input size: 7 | steps: 3  | elapsed: 6100 ns  | details: target 42 found at index 5; comparisons: 3
-5. BFS           | input size: 5 | steps: 11 | elapsed: 32800 ns | details: vertices visited: 5, adjacency entries examined: 6
-```
-
----
-
-## Team & Branch Workflow
-
-This repository was developed using a feature-branch integration workflow:
-
-| Contributor / Branch | Module Responsibility | Key Components |
+| Commit Hash | Commit Message | Description |
 | :--- | :--- | :--- |
-| **`azam-array-search`** | Linear array operations & Search algorithms | `ArrayOperations.java`, `SearchAlgorithms.java` |
-| **`rimas-stack-queue`** | Stack (LIFO) & Circular Queue (FIFO) | `IntStack.java`, `CircularQueue.java` |
-| **`chathurika-linked-list`** | Singly linked list & Dynamic chaining | `LinkedListStructure.java` |
-| **`nishath-graph-performance`** | Graph representation, Traversals, & Metrics | `Graph.java`, `PerformanceTracker.java` |
-| **`development`** | Integration branch & CLI system menu | `Main.java` orchestrator |
-| **`main`** | Production release branch | Stable deployment baseline |
+| `0901b2c` | `Created project structure` | Setup repository, `.gitignore`, and folder layout |
+| `17fe12b` | `Implemented patient visit history using Singly Linked List` | Created `VisitRecord`, `VisitNode`, and `VisitLinkedList` |
+| `5ac1a3d` | `Implemented patient records using Binary Search Tree (BST)` | Created `Patient`, `BSTNode`, and initial `PatientBST` |
+| `d516b9a` | `Added BST search and deletion operations` | Implemented full recursive search and 3-case BST deletion |
+| `ab5ed46` | `Implemented emergency queue using Queue (FIFO)` | Created `QueueNode` and `EmergencyQueue` |
+| `2a2c59f` | `Implemented treatment history using Stack (LIFO)` | Created `TreatmentRecord`, `StackNode`, and `TreatmentStack` |
+| `f836fde` | `Added interactive console menu and system integration` | Built user-friendly console CLI with sample data and workflow |
+| `f1c11e3` | `Added testing for all data structure operations` | Added `HospitalSystemTest` standalone verification suite |
+| `2e85051` | `Updated README with documentation and execution instructions` | Comprehensive project report and user guide |
+| *(Latest)* | `Added program output screenshots and updated documentation` | Verification screenshots of all 4 data structures |
 
 ---
 
-## License & Academic Honor Code
+## 6. Video Demonstration Guide (5 - 10 Minutes)
 
-This project was created for academic evaluation in **CIT300**. Code contributions are maintained in compliance with academic integrity guidelines.
+When recording your demonstration video:
+1. **Introduction (1 min):**
+   - Show your face on camera.
+   - State your name, student ID, and course (*CIT300 - Data Structures and Algorithms*).
+   - Give an overview of the Mini Hospital Emergency Management System.
+2. **GitHub Repository & Commits (1 min):**
+   - Open your GitHub repository in a browser or show `git log --oneline` in terminal.
+   - Highlight the progressive commit history demonstrating your development process.
+3. **Data Structures Explanation & Live Demo (5-6 mins):**
+   - **BST (Patient Records):** Run option `1`. Show in-order traversal (sorted by Patient ID). Demonstrate searching for an existing patient (e.g. ID 102), inserting a new patient, and deleting a patient.
+   - **Singly Linked List (Visit History):** Run option `2`. Select patient 102. Show existing visits, add a new visit, search for a visit, and remove a visit.
+   - **Queue (Emergency Waiting Queue):** Run option `3`. Display the waiting queue. Dequeue the front patient (demonstrating FIFO).
+   - **Stack (Treatment History):** Run option `4`. Display treatment history (demonstrating LIFO - most recent on top). Pop the top record.
+   - **Integrated Flow:** Run option `5` to show how a patient moves from the emergency queue to doctor consultation, pushing to stack and adding to linked list history.
+4. **Design Decisions & Reflection (1-2 mins):**
+   - Explain why custom node-based implementations were chosen instead of built-in collections.
+   - Reflect on learnings: recursive BST balancing/deletion complexity, pointer management in linked lists, and FIFO/LIFO real-world modeling.
+
+---
+
+## 7. Screenshots of Program Output
+
+All program execution outputs are saved as high-resolution images in the `screenshots/` directory:
+
+### 1. Main Menu Interface
+![Main Menu](screenshots/01_main_menu.png)
+
+### 2. Patient Records — Binary Search Tree (BST)
+Demonstrates In-Order Traversal (sorted by Patient ID), Search by ID, Insert new patient, and Deletion:
+![BST Patient Records](screenshots/02_bst_patient_records.png)
+
+### 3. Patient Visit History — Singly Linked List
+Demonstrates displaying previous hospital visits, adding a new visit, searching, and removing:
+![Visit History Linked List](screenshots/03_patient_visit_history.png)
+
+### 4. Emergency Patient Queue — Queue (FIFO)
+Demonstrates waiting queue display, FIFO dequeuing for treatment, and remaining queue state:
+![Emergency Queue](screenshots/04_emergency_queue.png)
+
+### 5. Treatment History — Stack (LIFO)
+Demonstrates completed treatment records in LIFO order (most recent first) and pop operation:
+![Treatment Stack](screenshots/05_treatment_stack.png)
+
+### 6. Emergency Treatment Simulation (Integrated Workflow)
+Demonstrates full cycle connecting all four data structures:
+![Emergency Simulation](screenshots/06_emergency_simulation.png)
+
+### 7. Automated Test Suite Verification
+Demonstrates all data structures passing automated test assertions:
+![Automated Test Suite](screenshots/07_automated_test_suite.png)
+
